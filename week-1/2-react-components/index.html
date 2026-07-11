@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React Components Practice</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: "Segoe UI", sans-serif; background: #f4f4f4; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+
+    // ── Header Component ──
+    function Header({ title, links }) {
+      return (
+        <header style={{ background: "#1a1a2e", color: "#fff", padding: "15px 30px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h1>{title}</h1>
+          <nav style={{ display: "flex", gap: "15px" }}>
+            {links.map((link, i) => (
+              <a key={i} href="#" style={{ color: "#ccc", textDecoration: "none" }}>{link}</a>
+            ))}
+          </nav>
+        </header>
+      );
+    }
+
+    // ── Button Component ──
+    function Button({ text, onClick, color }) {
+      return (
+        <button
+          onClick={onClick}
+          style={{
+            padding: "10px 20px",
+            background: color || "#e94560",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "1rem"
+          }}
+        >
+          {text}
+        </button>
+      );
+    }
+
+    // ── Card Component ──
+    function Card({ title, description, actionLabel, onAction }) {
+      return (
+        <div style={{ background: "#fff", padding: "25px", borderRadius: "8px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)", maxWidth: "300px" }}>
+          <h3 style={{ marginBottom: "10px" }}>{title}</h3>
+          <p style={{ color: "#666", marginBottom: "15px" }}>{description}</p>
+          <Button text={actionLabel} onClick={onAction} />
+        </div>
+      );
+    }
+
+    // ── Form Component ──
+    function Form({ onSubmit }) {
+      const [name, setName] = React.useState("");
+      const [email, setEmail] = React.useState("");
+
+      function handleSubmit(e) {
+        e.preventDefault();
+        onSubmit({ name, email });
+        setName("");
+        setEmail("");
+      }
+
+      return (
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "12px", maxWidth: "350px", background: "#fff", padding: "25px", borderRadius: "8px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
+          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" required style={{ padding: "10px", border: "1px solid #ddd", borderRadius: "4px", fontSize: "1rem" }} />
+          <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" type="email" required style={{ padding: "10px", border: "1px solid #ddd", borderRadius: "4px", fontSize: "1rem" }} />
+          <Button text="Submit" />
+        </form>
+      );
+    }
+
+    // ── Footer Component ──
+    function Footer({ text }) {
+      return (
+        <footer style={{ background: "#1a1a2e", color: "#aaa", textAlign: "center", padding: "20px", marginTop: "40px" }}>
+          <p>{text}</p>
+        </footer>
+      );
+    }
+
+    // ── App ──
+    function App() {
+      const [submitted, setSubmitted] = React.useState(null);
+
+      function handleCardAction(title) {
+        alert(`You clicked the button on: ${title}`);
+      }
+
+      function handleFormSubmit(data) {
+        setSubmitted(data);
+      }
+
+      return (
+        <div>
+          <Header title="Components Demo" links={["Home", "About", "Contact"]} />
+
+          <main style={{ padding: "40px 30px" }}>
+            <h2 style={{ marginBottom: "20px" }}>Card Components</h2>
+            <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", marginBottom: "40px" }}>
+              <Card title="Learn React" description="Start learning React from scratch." actionLabel="Start" onAction={() => handleCardAction("Learn React")} />
+              <Card title="Build Projects" description="Apply your skills by building real projects." actionLabel="Explore" onAction={() => handleCardAction("Build Projects")} />
+              <Card title="Join Community" description="Connect with other developers." actionLabel="Join" onAction={() => handleCardAction("Join Community")} />
+            </div>
+
+            <h2 style={{ marginBottom: "20px" }}>Form Component</h2>
+            <Form onSubmit={handleFormSubmit} />
+            {submitted && (
+              <div style={{ marginTop: "15px", padding: "15px", background: "#d4edda", borderRadius: "4px" }}>
+                <p><strong>Submitted:</strong> {submitted.name} ({submitted.email})</p>
+              </div>
+            )}
+          </main>
+
+          <Footer text="© 2024 Components Demo. All rights reserved." />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React Blog UI</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: "Segoe UI", sans-serif; background: #f4f4f4; color: #333; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="app.js"></script>
+
+  <script type="text/babel">
+
+    const categories = ["All", "React", "CSS", "JavaScript"];
+
+    function PostCard({ post }) {
+      return (
+        <div style={{ background: "#fff", padding: "25px", borderRadius: "8px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
+          <span style={{ background: "#e94560", color: "#fff", padding: "3px 10px", borderRadius: "12px", fontSize: "0.8rem" }}>
+            {post.category}
+          </span>
+          <h3 style={{ margin: "12px 0 8px" }}>{post.title}</h3>
+          <p style={{ color: "#666", marginBottom: "12px", fontSize: "0.95rem" }}>{post.excerpt}</p>
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.85rem", color: "#999" }}>
+            <span>By {post.author}</span>
+            <span>{post.date}</span>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [search, setSearch] = React.useState("");
+      const [activeCategory, setActiveCategory] = React.useState("All");
+
+      const filtered = posts.filter((post) => {
+        const matchesSearch = post.title.toLowerCase().includes(search.toLowerCase()) ||
+                              post.author.toLowerCase().includes(search.toLowerCase());
+        const matchesCategory = activeCategory === "All" || post.category === activeCategory;
+        return matchesSearch && matchesCategory;
+      });
+
+      return (
+        <div>
+          <header style={{ background: "#1a1a2e", color: "#fff", padding: "20px 30px", textAlign: "center" }}>
+            <h1>My Blog</h1>
+          </header>
+
+          <main style={{ maxWidth: "900px", margin: "0 auto", padding: "30px 20px" }}>
+
+            <input
+              type="text"
+              placeholder="Search posts..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{ width: "100%", padding: "12px", borderRadius: "4px", border: "1px solid #ddd", fontSize: "1rem", marginBottom: "20px" }}
+            />
+
+            <div style={{ display: "flex", gap: "10px", marginBottom: "30px", flexWrap: "wrap" }}>
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  style={{
+                    padding: "8px 18px",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    background: activeCategory === cat ? "#e94560" : "#ddd",
+                    color: activeCategory === cat ? "#fff" : "#333",
+                    fontSize: "0.9rem"
+                  }}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ display: "grid", gap: "20px" }}>
+              {filtered.length > 0 ? (
+                filtered.map((post) => <PostCard key={post.id} post={post} />)
+              ) : (
+                <p style={{ textAlign: "center", color: "#999" }}>No posts found.</p>
+              )}
+            </div>
+
+          </main>
+
+          <footer style={{ background: "#1a1a2e", color: "#aaa", textAlign: "center", padding: "20px", marginTop: "40px" }}>
+            <p>&copy; 2024 My Blog</p>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+  </script>
+</body>
+</html>
